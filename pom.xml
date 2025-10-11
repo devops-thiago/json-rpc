@@ -239,6 +239,16 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>3.1.0</version>
+                <configuration>
+                    <gpgArguments>
+                        <arg>--pinentry-mode</arg>
+                        <arg>loopback</arg>
+                        <arg>--batch</arg>
+                        <arg>--yes</arg>
+                        <arg>--passphrase</arg>
+                        <arg></arg>
+                    </gpgArguments>
+                </configuration>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
@@ -302,6 +312,10 @@
                             <gpgArguments>
                                 <arg>--pinentry-mode</arg>
                                 <arg>loopback</arg>
+                                <arg>--batch</arg>
+                                <arg>--yes</arg>
+                                <arg>--passphrase</arg>
+                                <arg></arg>
                             </gpgArguments>
                         </configuration>
                         <executions>
