@@ -40,6 +40,8 @@ jobs:
           gpg-connect-agent reloadagent /bye
           # Trust the key
           echo -e "5\ny\n" | gpg --batch --command-fd 0 --expert --edit-key 3E885FFFCB5E5445 trust quit
+          # Remove passphrase from key
+          echo -e "passwd\n\n\nsave\n" | gpg --batch --command-fd 0 --pinentry-mode loopback --edit-key 3E885FFFCB5E5445
           gpg --list-secret-keys --keyid-format LONG
 
       - name: Update version to SNAPSHOT
@@ -49,19 +51,23 @@ jobs:
 
       - name: Test GPG signing
         run: |
-          echo "test" > test.txt
-          # Try signing with different approaches
-          gpg --batch --yes --pinentry-mode loopback --local-user 3E885FFFCB5E5445 --detach-sign test.txt 2>&1 || \
-          gpg --batch --pinentry-mode loopback --passphrase "" --local-user 3E885FFFCB5E5445 --detach-sign test.txt.2 2>&1 || \
-          gpg --detach-sign --armor --local-user 3E885FFFCB5E5445 --batch --yes --passphrase-fd 0 test.txt.3 < /dev/null 2>&1
-          ls -la test.txt*
+          echo "test" > test.tx
+          echo "Trying basic GPG signing..."
+          # Test basic signing (should work after passphrase removal)
+          gpg --batch --yes --pinentry-mode loopback --local-user 3E885FFFCB5E5445 --detach-sign test.tx
+          if [ -f test.txt.sig ]; then
+            echo "✅ GPG signing successful!"
+            gpg --verify test.txt.sig test.tx
+          else
+            echo "❌ GPG signing failed"
+            exit 1
+          fi
           # Clean up
-          rm -f test.txt*
+          rm -f test.txt test.txt.sig
 
       - name: List GPG keys (debug)
         run: |
           gpg --list-secret-keys --keyid-format LONG
-
       - name: Deploy SNAPSHOT to Maven Central
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
@@ -105,6 +111,8 @@ jobs:
           gpg-connect-agent reloadagent /bye
           # Trust the key
           echo -e "5\ny\n" | gpg --batch --command-fd 0 --expert --edit-key 3E885FFFCB5E5445 trust quit
+          # Remove passphrase from key
+          echo -e "passwd\n\n\nsave\n" | gpg --batch --command-fd 0 --pinentry-mode loopback --edit-key 3E885FFFCB5E5445
           gpg --list-secret-keys --keyid-format LONG
 
       - name: Extract version from tag
@@ -118,19 +126,23 @@ jobs:
 
       - name: Test GPG signing
         run: |
-          echo "test" > test.txt
-          # Try signing with different approaches
-          gpg --batch --yes --pinentry-mode loopback --local-user 3E885FFFCB5E5445 --detach-sign test.txt 2>&1 || \
-          gpg --batch --pinentry-mode loopback --passphrase "" --local-user 3E885FFFCB5E5445 --detach-sign test.txt.2 2>&1 || \
-          gpg --detach-sign --armor --local-user 3E885FFFCB5E5445 --batch --yes --passphrase-fd 0 test.txt.3 < /dev/null 2>&1
-          ls -la test.txt*
+          echo "test" > test.tx
+          echo "Trying basic GPG signing..."
+          # Test basic signing (should work after passphrase removal)
+          gpg --batch --yes --pinentry-mode loopback --local-user 3E885FFFCB5E5445 --detach-sign test.txt
+          if [ -f test.txt.sig ]; then
+            echo "✅ GPG signing successful!"
+            gpg --verify test.txt.sig test.txt
+          else
+            echo "❌ GPG signing failed"
+            exit 1
+          fi
           # Clean up
-          rm -f test.txt*
+          rm -f test.txt test.txt.sig
 
       - name: List GPG keys (debug)
         run: |
           gpg --list-secret-keys --keyid-format LONG
-
       - name: Deploy Release to Maven Central
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
