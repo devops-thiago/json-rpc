@@ -47,7 +47,9 @@ jobs:
 
       - name: Update version to SNAPSHOT
         run: |
-          mvn versions:set -DnewVersion=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)-SNAPSHOT
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          BASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          mvn versions:set -DnewVersion=${BASE_VERSION}-${COMMIT_HASH}-SNAPSHOT
           mvn versions:commit
 
       - name: Verify Maven settings
