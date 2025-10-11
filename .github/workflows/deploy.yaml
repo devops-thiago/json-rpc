@@ -27,7 +27,6 @@ jobs:
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Update version to SNAPSHOT
         run: |
@@ -38,8 +37,10 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        run: mvn clean deploy -P release -DskipTests
+          GPG_TTY: $(tty)
+        run: |
+          export GPG_TTY=$(tty)
+          mvn clean deploy -P release -DskipTests -Dgpg.keyname=3E885FFFCB5E5445
 
   deploy-release:
     name: Deploy Release
@@ -60,7 +61,6 @@ jobs:
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Extract version from tag
         id: get_version
@@ -75,8 +75,10 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        run: mvn clean deploy -P release -DskipTests
+          GPG_TTY: $(tty)
+        run: |
+          export GPG_TTY=$(tty)
+          mvn clean deploy -P release -DskipTests -Dgpg.keyname=3E885FFFCB5E5445
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
