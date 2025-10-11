@@ -43,6 +43,13 @@ jobs:
           mvn versions:set -DnewVersion=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)-SNAPSHOT
           mvn versions:commit
 
+      - name: Test GPG signing
+        run: |
+          echo "test" > test.txt
+          gpg --batch --yes --passphrase "" --pinentry-mode loopback --detach-sign test.txt
+          gpg --verify test.txt.sig test.txt
+          rm test.txt test.txt.sig
+
       - name: List GPG keys (debug)
         run: |
           gpg --list-secret-keys --keyid-format LONG
@@ -51,10 +58,12 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ""
           GPG_TTY: $(tty)
         run: |
           export GPG_TTY=$(tty)
-          mvn clean deploy -P release -DskipTests
+          export MAVEN_GPG_PASSPHRASE=""
+          mvn clean deploy -P release -DskipTests -Dgpg.passphrase=""
 
   deploy-release:
     name: Deploy Release
@@ -95,6 +104,13 @@ jobs:
           mvn versions:set -DnewVersion=${{ steps.get_version.outputs.VERSION }}
           mvn versions:commit
 
+      - name: Test GPG signing
+        run: |
+          echo "test" > test.txt
+          gpg --batch --yes --passphrase "" --pinentry-mode loopback --detach-sign test.txt
+          gpg --verify test.txt.sig test.txt
+          rm test.txt test.txt.sig
+
       - name: List GPG keys (debug)
         run: |
           gpg --list-secret-keys --keyid-format LONG
@@ -103,10 +119,12 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ""
           GPG_TTY: $(tty)
         run: |
           export GPG_TTY=$(tty)
-          mvn clean deploy -P release -DskipTests
+          export MAVEN_GPG_PASSPHRASE=""
+          mvn clean deploy -P release -DskipTests -Dgpg.passphrase=""
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1

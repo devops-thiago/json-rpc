@@ -246,7 +246,6 @@
                         <arg>--batch</arg>
                         <arg>--yes</arg>
                     </gpgArguments>
-                    <passphrase></passphrase>
                 </configuration>
                 <executions>
                     <execution>
@@ -314,7 +313,6 @@
                                 <arg>--batch</arg>
                                 <arg>--yes</arg>
                             </gpgArguments>
-                            <passphrase></passphrase>
                         </configuration>
                         <executions>
                             <execution>
