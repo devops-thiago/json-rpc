@@ -527,7 +527,7 @@ public class IntegrationTest {
   public void testProtocolCompliance_ErrorMustHaveCodeAndMessage() {
     JsonRpcError<?> error = JsonRpcError.of(-32600, "Invalid Request");
 
-    assertNotNull(error.getCode());
+    assertEquals(-32600, error.getCode());
     assertNotNull(error.getMessage());
     assertFalse(error.getMessage().isEmpty());
   }
