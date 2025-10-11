@@ -28,56 +28,22 @@ jobs:
           server-password: MAVEN_PASSWORD
 
       - name: Import GPG key
-        run: |
-          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
-          gpg --list-secret-keys --keyid-format LONG
-
-      - name: Configure GPG for no passphrase
-        run: |
-          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
-          echo "max-cache-ttl 34560000" >> ~/.gnupg/gpg-agent.conf
-          echo "default-cache-ttl 34560000" >> ~/.gnupg/gpg-agent.conf
-          gpg-connect-agent reloadagent /bye
-          # Trust the key
-          echo -e "5\ny\n" | gpg --batch --command-fd 0 --expert --edit-key 3E885FFFCB5E5445 trust quit
-          # Remove passphrase from key
-          echo -e "passwd\n\n\nsave\n" | gpg --batch --command-fd 0 --pinentry-mode loopback --edit-key 3E885FFFCB5E5445
-          gpg --list-secret-keys --keyid-format LONG
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PRIVATE_KEY_PASSPHRASE }}
 
       - name: Update version to SNAPSHOT
         run: |
           mvn versions:set -DnewVersion=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)-SNAPSHOT
           mvn versions:commit
 
-      - name: Test GPG signing
-        run: |
-          echo "test" > test.tx
-          echo "Trying basic GPG signing..."
-          # Test basic signing (should work after passphrase removal)
-          gpg --batch --yes --pinentry-mode loopback --local-user 3E885FFFCB5E5445 --detach-sign test.tx
-          if [ -f test.txt.sig ]; then
-            echo "✅ GPG signing successful!"
-            gpg --verify test.txt.sig test.tx
-          else
-            echo "❌ GPG signing failed"
-            exit 1
-          fi
-          # Clean up
-          rm -f test.txt test.txt.sig
-
-      - name: List GPG keys (debug)
-        run: |
-          gpg --list-secret-keys --keyid-format LONG
       - name: Deploy SNAPSHOT to Maven Central
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-          MAVEN_GPG_PASSPHRASE: ""
-          GPG_TTY: $(tty)
         run: |
-          export GPG_TTY=$(tty)
-          export MAVEN_GPG_PASSPHRASE=""
-          mvn clean deploy -P release -DskipTests -Dgpg.passphrase=""
+          mvn clean deploy -P release -DskipTests
 
   deploy-release:
     name: Deploy Release
@@ -99,21 +65,10 @@ jobs:
           server-password: MAVEN_PASSWORD
 
       - name: Import GPG key
-        run: |
-          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
-          gpg --list-secret-keys --keyid-format LONG
-
-      - name: Configure GPG for no passphrase
-        run: |
-          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
-          echo "max-cache-ttl 34560000" >> ~/.gnupg/gpg-agent.conf
-          echo "default-cache-ttl 34560000" >> ~/.gnupg/gpg-agent.conf
-          gpg-connect-agent reloadagent /bye
-          # Trust the key
-          echo -e "5\ny\n" | gpg --batch --command-fd 0 --expert --edit-key 3E885FFFCB5E5445 trust quit
-          # Remove passphrase from key
-          echo -e "passwd\n\n\nsave\n" | gpg --batch --command-fd 0 --pinentry-mode loopback --edit-key 3E885FFFCB5E5445
-          gpg --list-secret-keys --keyid-format LONG
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PRIVATE_KEY_PASSPHRASE }}
 
       - name: Extract version from tag
         id: get_version
@@ -124,35 +79,12 @@ jobs:
           mvn versions:set -DnewVersion=${{ steps.get_version.outputs.VERSION }}
           mvn versions:commit
 
-      - name: Test GPG signing
-        run: |
-          echo "test" > test.tx
-          echo "Trying basic GPG signing..."
-          # Test basic signing (should work after passphrase removal)
-          gpg --batch --yes --pinentry-mode loopback --local-user 3E885FFFCB5E5445 --detach-sign test.txt
-          if [ -f test.txt.sig ]; then
-            echo "✅ GPG signing successful!"
-            gpg --verify test.txt.sig test.txt
-          else
-            echo "❌ GPG signing failed"
-            exit 1
-          fi
-          # Clean up
-          rm -f test.txt test.txt.sig
-
-      - name: List GPG keys (debug)
-        run: |
-          gpg --list-secret-keys --keyid-format LONG
       - name: Deploy Release to Maven Central
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-          MAVEN_GPG_PASSPHRASE: ""
-          GPG_TTY: $(tty)
         run: |
-          export GPG_TTY=$(tty)
-          export MAVEN_GPG_PASSPHRASE=""
-          mvn clean deploy -P release -DskipTests -Dgpg.passphrase=""
+          mvn clean deploy -P release -DskipTests
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
