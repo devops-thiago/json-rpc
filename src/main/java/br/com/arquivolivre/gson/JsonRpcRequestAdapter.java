@@ -43,7 +43,8 @@ public class JsonRpcRequestAdapter extends TypeAdapter<JsonRpcRequest<?>> {
 
     if (request.getParams().isPresent()) {
       out.name("params");
-      gson.toJson(request.getParams().get(), request.getParams().get().getClass(), out);
+      Object params = request.getParams().get();
+      gson.toJson(params, params.getClass(), out);
     }
 
     if (request.getId().isPresent()) {

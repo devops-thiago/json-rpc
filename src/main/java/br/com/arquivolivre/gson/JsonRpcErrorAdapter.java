@@ -42,7 +42,8 @@ public class JsonRpcErrorAdapter extends TypeAdapter<JsonRpcError<?>> {
 
     if (error.getData().isPresent()) {
       out.name("data");
-      gson.toJson(error.getData().get(), error.getData().get().getClass(), out);
+      Object data = error.getData().get();
+      gson.toJson(data, data.getClass(), out);
     }
 
     out.endObject();
