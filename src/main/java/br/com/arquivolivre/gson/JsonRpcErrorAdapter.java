@@ -40,9 +40,10 @@ public class JsonRpcErrorAdapter extends TypeAdapter<JsonRpcError<?>> {
     out.name("message");
     out.value(error.getMessage());
 
-    if (error.getData().isPresent()) {
+    var dataOptional = error.getData();
+    if (dataOptional.isPresent()) {
       out.name("data");
-      Object data = error.getData().get();
+      Object data = dataOptional.get();
       gson.toJson(data, data.getClass(), out);
     }
 

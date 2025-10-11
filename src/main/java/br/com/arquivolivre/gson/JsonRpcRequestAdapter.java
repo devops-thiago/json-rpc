@@ -41,15 +41,17 @@ public class JsonRpcRequestAdapter extends TypeAdapter<JsonRpcRequest<?>> {
     out.name("method");
     out.value(request.getMethod());
 
-    if (request.getParams().isPresent()) {
+    var paramsOptional = request.getParams();
+    if (paramsOptional.isPresent()) {
       out.name("params");
-      Object params = request.getParams().get();
+      Object params = paramsOptional.get();
       gson.toJson(params, params.getClass(), out);
     }
 
-    if (request.getId().isPresent()) {
+    var idOptional = request.getId();
+    if (idOptional.isPresent()) {
       out.name("id");
-      var id = request.getId().get();
+      var id = idOptional.get();
       // Use pattern matching for instanceof (Java 16+)
       switch (id) {
         case String s -> out.value(s);
