@@ -42,13 +42,16 @@ public class JsonRpcResponseAdapter extends TypeAdapter<JsonRpcResponse<?>> {
     if (response.isSuccess()) {
       out.name("result");
       if (response.getResult().isPresent()) {
-        gson.toJson(response.getResult().get(), response.getResult().get().getClass(), out);
+        Object result = response.getResult().get();
+        gson.toJson(result, result.getClass(), out);
       } else {
         out.nullValue();
       }
     } else {
       out.name("error");
-      gson.toJson(response.getError().get(), JsonRpcError.class, out);
+      if (response.getError().isPresent()) {
+        gson.toJson(response.getError().get(), JsonRpcError.class, out);
+      }
     }
 
     out.name("id");
