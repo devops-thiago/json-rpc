@@ -32,6 +32,12 @@ jobs:
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
 
+      - name: Configure GPG for no passphrase
+        run: |
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+          echo "RELOADAGENT" | gpg-connect-agent
+          gpg --list-secret-keys --keyid-format LONG
+
       - name: Update version to SNAPSHOT
         run: |
           mvn versions:set -DnewVersion=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)-SNAPSHOT
@@ -73,6 +79,12 @@ jobs:
         uses: crazy-max/ghaction-import-gpg@v6
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+
+      - name: Configure GPG for no passphrase
+        run: |
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+          echo "RELOADAGENT" | gpg-connect-agent
+          gpg --list-secret-keys --keyid-format LONG
 
       - name: Extract version from tag
         id: get_version

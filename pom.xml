@@ -245,9 +245,8 @@
                         <arg>loopback</arg>
                         <arg>--batch</arg>
                         <arg>--yes</arg>
-                        <arg>--passphrase</arg>
-                        <arg></arg>
                     </gpgArguments>
+                    <passphrase></passphrase>
                 </configuration>
                 <executions>
                     <execution>
@@ -314,9 +313,8 @@
                                 <arg>loopback</arg>
                                 <arg>--batch</arg>
                                 <arg>--yes</arg>
-                                <arg>--passphrase</arg>
-                                <arg></arg>
                             </gpgArguments>
+                            <passphrase></passphrase>
                         </configuration>
                         <executions>
                             <execution>
