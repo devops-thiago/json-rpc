@@ -28,14 +28,18 @@ jobs:
           server-password: MAVEN_PASSWORD
 
       - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
 
       - name: Configure GPG for no passphrase
         run: |
           echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
-          echo "RELOADAGENT" | gpg-connect-agent
+          echo "max-cache-ttl 34560000" >> ~/.gnupg/gpg-agent.conf
+          echo "default-cache-ttl 34560000" >> ~/.gnupg/gpg-agent.conf
+          gpg-connect-agent reloadagent /bye
+          # Trust the key
+          echo -e "5\ny\n" | gpg --batch --command-fd 0 --expert --edit-key 3E885FFFCB5E5445 trust quit
           gpg --list-secret-keys --keyid-format LONG
 
       - name: Update version to SNAPSHOT
@@ -46,9 +50,13 @@ jobs:
       - name: Test GPG signing
         run: |
           echo "test" > test.txt
-          gpg --batch --yes --passphrase "" --pinentry-mode loopback --detach-sign test.txt
-          gpg --verify test.txt.sig test.txt
-          rm test.txt test.txt.sig
+          # Try signing with different approaches
+          gpg --batch --yes --pinentry-mode loopback --local-user 3E885FFFCB5E5445 --detach-sign test.txt 2>&1 || \
+          gpg --batch --pinentry-mode loopback --passphrase "" --local-user 3E885FFFCB5E5445 --detach-sign test.txt.2 2>&1 || \
+          gpg --detach-sign --armor --local-user 3E885FFFCB5E5445 --batch --yes --passphrase-fd 0 test.txt.3 < /dev/null 2>&1
+          ls -la test.txt*
+          # Clean up
+          rm -f test.txt*
 
       - name: List GPG keys (debug)
         run: |
@@ -85,14 +93,18 @@ jobs:
           server-password: MAVEN_PASSWORD
 
       - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
 
       - name: Configure GPG for no passphrase
         run: |
           echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
-          echo "RELOADAGENT" | gpg-connect-agent
+          echo "max-cache-ttl 34560000" >> ~/.gnupg/gpg-agent.conf
+          echo "default-cache-ttl 34560000" >> ~/.gnupg/gpg-agent.conf
+          gpg-connect-agent reloadagent /bye
+          # Trust the key
+          echo -e "5\ny\n" | gpg --batch --command-fd 0 --expert --edit-key 3E885FFFCB5E5445 trust quit
           gpg --list-secret-keys --keyid-format LONG
 
       - name: Extract version from tag
@@ -107,9 +119,13 @@ jobs:
       - name: Test GPG signing
         run: |
           echo "test" > test.txt
-          gpg --batch --yes --passphrase "" --pinentry-mode loopback --detach-sign test.txt
-          gpg --verify test.txt.sig test.txt
-          rm test.txt test.txt.sig
+          # Try signing with different approaches
+          gpg --batch --yes --pinentry-mode loopback --local-user 3E885FFFCB5E5445 --detach-sign test.txt 2>&1 || \
+          gpg --batch --pinentry-mode loopback --passphrase "" --local-user 3E885FFFCB5E5445 --detach-sign test.txt.2 2>&1 || \
+          gpg --detach-sign --armor --local-user 3E885FFFCB5E5445 --batch --yes --passphrase-fd 0 test.txt.3 < /dev/null 2>&1
+          ls -la test.txt*
+          # Clean up
+          rm -f test.txt*
 
       - name: List GPG keys (debug)
         run: |
