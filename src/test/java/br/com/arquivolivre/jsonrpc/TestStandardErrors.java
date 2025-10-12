@@ -1,4 +1,4 @@
-package br.com.arquivolivre;
+package br.com.arquivolivre.jsonrpc;
 
 import static org.junit.jupiter.api.Assertions.*;
 

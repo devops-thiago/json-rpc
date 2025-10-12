@@ -1,5 +1,10 @@
 package br.com.arquivolivre;
 
+import br.com.arquivolivre.jsonrpc.JsonRpcRequest;
+import br.com.arquivolivre.jsonrpc.JsonRpcResponse;
+import br.com.arquivolivre.jsonrpc.JsonRpcError;
+import br.com.arquivolivre.jsonrpc.StandardErrors;
+
 /**
  * Example demonstrating error handling with standard and custom errors.
  */

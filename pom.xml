@@ -6,7 +6,7 @@
 
     <groupId>br.com.arquivolivre</groupId>
     <artifactId>json-rpc</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.3</version>
     <packaging>jar</packaging>
 
     <name>JSON-RPC 2.0 Library</name>

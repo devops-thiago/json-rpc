@@ -1,5 +1,9 @@
 package br.com.arquivolivre;
 
+import br.com.arquivolivre.jsonrpc.JsonRpcException;
+import br.com.arquivolivre.jsonrpc.JsonRpcRequest;
+import br.com.arquivolivre.jsonrpc.JsonRpcError;
+
 /**
  * Example demonstrating validation and exception handling.
  */

@@ -1,8 +1,8 @@
-package br.com.arquivolivre.validation;
+package br.com.arquivolivre.jsonrpc.validation;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import br.com.arquivolivre.JsonRpcException;
+import br.com.arquivolivre.jsonrpc.JsonRpcException;
 import org.junit.jupiter.api.Test;
 
 /** Comprehensive unit tests for JsonRpcValidator. */

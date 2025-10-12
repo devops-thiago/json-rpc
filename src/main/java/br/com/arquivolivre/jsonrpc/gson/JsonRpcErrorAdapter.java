@@ -1,8 +1,8 @@
-package br.com.arquivolivre.gson;
+package br.com.arquivolivre.jsonrpc.gson;
 
-import br.com.arquivolivre.JsonRpcError;
-import br.com.arquivolivre.JsonRpcException;
-import br.com.arquivolivre.StandardErrors;
+import br.com.arquivolivre.jsonrpc.JsonRpcError;
+import br.com.arquivolivre.jsonrpc.JsonRpcException;
+import br.com.arquivolivre.jsonrpc.StandardErrors;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

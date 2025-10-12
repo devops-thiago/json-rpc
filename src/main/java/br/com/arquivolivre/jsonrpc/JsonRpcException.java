@@ -1,4 +1,4 @@
-package br.com.arquivolivre;
+package br.com.arquivolivre.jsonrpc;
 
 /**
  * Runtime exception for JSON-RPC protocol violations. Carries a JsonRpcError for structured error

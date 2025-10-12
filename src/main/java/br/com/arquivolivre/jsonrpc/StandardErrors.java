@@ -1,4 +1,4 @@
-package br.com.arquivolivre;
+package br.com.arquivolivre.jsonrpc;
 
 /**
  * Utility class providing predefined standard JSON-RPC 2.0 error codes and factory methods.

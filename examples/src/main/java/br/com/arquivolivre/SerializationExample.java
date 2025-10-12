@@ -1,6 +1,8 @@
 package br.com.arquivolivre;
 
-import br.com.arquivolivre.gson.JsonRpcGsonConfig;
+import br.com.arquivolivre.jsonrpc.JsonRpcRequest;
+import br.com.arquivolivre.jsonrpc.JsonRpcResponse;
+import br.com.arquivolivre.jsonrpc.gson.JsonRpcGsonConfig;
 import com.google.gson.reflect.TypeToken;
 
 /**
