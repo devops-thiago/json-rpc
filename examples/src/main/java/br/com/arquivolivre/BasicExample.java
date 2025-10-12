@@ -1,6 +1,10 @@
 package br.com.arquivolivre;
 
-import br.com.arquivolivre.gson.JsonRpcGsonConfig;
+import br.com.arquivolivre.jsonrpc.JsonRpcRequest;
+import br.com.arquivolivre.jsonrpc.JsonRpcResponse;
+import br.com.arquivolivre.jsonrpc.JsonRpcError;
+import br.com.arquivolivre.jsonrpc.StandardErrors;
+import br.com.arquivolivre.jsonrpc.gson.JsonRpcGsonConfig;
 
 /**
  * Basic example demonstrating JSON-RPC request and response creation.

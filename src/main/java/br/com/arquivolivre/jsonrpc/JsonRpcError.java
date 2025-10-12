@@ -1,6 +1,6 @@
-package br.com.arquivolivre;
+package br.com.arquivolivre.jsonrpc;
 
-import br.com.arquivolivre.validation.JsonRpcValidator;
+import br.com.arquivolivre.jsonrpc.validation.JsonRpcValidator;
 import java.util.Optional;
 
 /**

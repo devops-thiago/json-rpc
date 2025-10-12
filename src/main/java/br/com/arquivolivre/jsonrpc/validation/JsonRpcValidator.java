@@ -1,7 +1,7 @@
-package br.com.arquivolivre.validation;
+package br.com.arquivolivre.jsonrpc.validation;
 
-import br.com.arquivolivre.JsonRpcError;
-import br.com.arquivolivre.JsonRpcException;
+import br.com.arquivolivre.jsonrpc.JsonRpcError;
+import br.com.arquivolivre.jsonrpc.JsonRpcException;
 
 /**
  * Centralized validation logic for JSON-RPC objects. Provides static utility methods for validating

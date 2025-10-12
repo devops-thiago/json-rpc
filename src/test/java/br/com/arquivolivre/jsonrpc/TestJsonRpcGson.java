@@ -1,8 +1,8 @@
-package br.com.arquivolivre;
+package br.com.arquivolivre.jsonrpc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import br.com.arquivolivre.gson.JsonRpcGsonConfig;
+import br.com.arquivolivre.jsonrpc.gson.JsonRpcGsonConfig;
 import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
