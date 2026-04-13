@@ -125,7 +125,7 @@ jobs:
           mvn clean deploy -P release -DskipTests
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: target/*.jar
           generate_release_notes: true
